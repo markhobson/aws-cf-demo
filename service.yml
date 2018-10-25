@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  
+  EcsService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref EcsCluster
+      DesiredCount: 1
+      TaskDefinition: !Ref EcsTaskDefinition
+
+  EcsTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+      - Name: server
+        Image: !Join ['.', [!Ref 'AWS::AccountId', dkr.ecr, !Ref 'AWS::Region', amazonaws.com/aws-cf-demo]]
+        Memory: 300
+        PortMappings:
+        - HostPort: 80
+          ContainerPort: 8080
